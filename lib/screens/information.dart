@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class Information extends StatefulWidget {
@@ -10,52 +11,58 @@ class Information extends StatefulWidget {
 
 class _InformationState extends State<Information> {
   CollectionReference userInfo = FirebaseFirestore.instance.collection('users');
+  var authObject1 = FirebaseAuth.instance;
+  DocumentSnapshot? documentSnapshot;
+  Future myFun() async {
+    documentSnapshot = await userInfo.doc(authObject1.currentUser!.uid).get();
+  }
+
+  // var document = FirebaseFirestore.instance
+  //     .collection('users')
+  //     .doc(authObject1.currentUser!.uid);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Information'),
-          centerTitle: true,
-        ),
-        body: StreamBuilder(
-          stream: userInfo.snapshots(),
-          builder: ((context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-            if (streamSnapshot.hasData) {
-              return ListView.builder(
-                  itemCount: streamSnapshot.data!.docs.length,
-                  itemBuilder: ((context, index) {
-                    final DocumentSnapshot documentSnapshot =
-                        streamSnapshot.data!.docs[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 150),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            documentSnapshot['name'].toString(),
-                            style: TextStyle(fontSize: 30),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            documentSnapshot['type'].toString(),
-                            style: TextStyle(fontSize: 30, color: Colors.red),
-                          ),
-                          SizedBox(
-                            height: 30,
-                          ),
-                          Text(
-                            documentSnapshot['email'].toString(),
-                            style: TextStyle(fontSize: 30),
-                          ),
-                        ],
-                      ),
-                    );
-                  }));
-            }
-            return Container();
-          }),
-        ));
+      appBar: AppBar(
+        title: Text('Information'),
+        centerTitle: true,
+      ),
+      body: FutureBuilder(
+        future: myFun(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  documentSnapshot!['name'].toString(),
+                  style: TextStyle(fontSize: 30),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  documentSnapshot!['type'].toString(),
+                  style: TextStyle(fontSize: 30, color: Colors.red),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  documentSnapshot!['email'].toString(),
+                  style: TextStyle(fontSize: 30),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }

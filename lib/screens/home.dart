@@ -18,7 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Color myColor = Colors.red;
+  List<Color> myColor = [Colors.white, Colors.white];
   String myVal = 'a';
   String userEmail = FirebaseAuth.instance.currentUser!.email.toString();
   var authObject2 = FirebaseAuth.instance;
@@ -34,16 +34,16 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     if (userEmail == 'red@red.com') {
-      myColor = Colors.red;
+      myColor = [Colors.red, Colors.red];
     }
     if (userEmail == 'green@green.com') {
-      myColor = Colors.green;
+      myColor = [Colors.green, Colors.green];
     }
     if (userEmail == 'blue@blue.com') {
-      myColor = Colors.blue;
+      myColor = [Colors.blue, Colors.blue];
     }
     if (userEmail == 'mix@mix.com') {
-      myColor = Colors.blue;
+      myColor = [Colors.green, Colors.blue];
     }
   }
 
@@ -55,9 +55,9 @@ class _HomeState extends State<Home> {
         centerTitle: true,
       ),
       body: Container(
+        decoration: BoxDecoration(gradient: LinearGradient(colors: myColor)),
         width: double.infinity,
         height: double.infinity,
-        color: myColor,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
