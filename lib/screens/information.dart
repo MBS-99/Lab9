@@ -17,9 +17,6 @@ class _InformationState extends State<Information> {
     documentSnapshot = await userInfo.doc(authObject1.currentUser!.uid).get();
   }
 
-  // var document = FirebaseFirestore.instance
-  //     .collection('users')
-  //     .doc(authObject1.currentUser!.uid);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +46,7 @@ class _InformationState extends State<Information> {
                 ),
                 Text(
                   documentSnapshot!['type'].toString(),
-                  style: TextStyle(fontSize: 30, color: Colors.red),
+                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 30,
